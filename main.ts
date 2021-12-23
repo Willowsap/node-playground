@@ -1,26 +1,19 @@
-const incr = (d: Array<number>) => {
-  if (d.every(v => v === 9)) {
-    d.push(1);
-    d.every((v, i) => d[i] = v % 9);
-  } else {
-    d.every((v, i) => {return v !== 9 ? !(++d[i]) : !(d[i] = 0)});
-    for (let i = 0; i < d.length; i++) {
-      if (d[i] !== 9) {
-        d[i]++;
-        break;
-      } else {
-        d[i] = 0;
-      }
+import fs from "fs";
+import path from "path";
+import Utils from "./services/util.service";
+
+const startDir = path.join(__dirname, "pictures");
+const files = Utils.getAllFiles(startDir);
+for(let i = 0; i < files.length; i++) {
+  const x = i;
+  const ext = files[x].slice(-3);
+  const oldName = `${startDir}/${files[x]}`;
+  const newName = `${startDir}/ajax_${x}.${ext}`;
+  fs.rename(oldName, newName, (err) => {
+    if(err) {
+      console.log(err)
+    } else {
+      console.log(`${x}:  ${oldName} => ${newName}`)
     }
-  }
+  });
 }
-const specialNums = (maxDigits: number) => {
-  for(let r1 = 0, r2 = '', d = [0]; d.length < maxDigits + 1; r1 = 0, r2 = '', incr(d)) {
-    d.forEach(v => {
-      r1 += v**v;
-      r2 += `${v}`;
-    });
-    if (`${r1}` == r2) console.log(r1); // it's special
-  }
-}
-specialNums(10)
